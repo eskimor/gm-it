@@ -1,9 +1,37 @@
 #!/usr/bin/env bash
 
 # USAGE:
-
-# ./setup-dd-wrt.sh path/to/img ap-number
+# Configure this PC with an IP address like 192.168.1.10, then run:
 #
+# ./setup-dd-wrt.sh ap-number
+#
+
+############## FLASH ####################
+
+imgURI=https://download1.dd-wrt.com/dd-wrtv2/downloads/betas/2019/08-06-2019-r40559/netgear-r7800/factory-to-ddwrt.img
+imgFile=./factory-to-ddwrt.img
+
+ap_number="${1}"
+
+if [[ ! -e ${imgFile} ]]
+then
+  # Be reasonably sure we only use fully downloaded files:
+  # A hash check ala nix would definitely be better ... hmm, maybe I should nixify this.
+  mkdir .dl
+  cd .dl
+  wget ${imgURI}
+  mv ${imgFile} ../
+  cd ..
+  rmdir .dl
+fi
+
+tftp 192.168.1.1 <<EOF
+binary
+put ${imgFile}
+EOF
+sleep 90s
+
+############## FLASH END ####################
 
 mapfile -t array < ./secure/ap-password
 user=${array[0]}
@@ -27,3 +55,5 @@ function authCurl {
 authCurl --data-urlencode submit_button=services --data-urlencode action=ApplyTake --data-urlencode commit=1 --data-urlencode sshd_enable=1 --data-urlencode sshd_passwd_auth=0 --data-urlencode sshd_authorized_keys="${ssh_pub_key}" --referer http://192.168.1.1/Services.asp http://192.168.1.1/applyuser.cgi
 
 sed -i 's/192.168.1.1.*$//1' ~/.ssh/known_hosts
+echo "Waiting for ssh to come up ..."
+sleep 40s
