@@ -57,3 +57,4 @@ authCurl --data-urlencode submit_button=services --data-urlencode action=ApplyTa
 sed -i 's/192.168.1.1.*$//1' ~/.ssh/known_hosts
 echo "Waiting for ssh to come up ..."
 sleep 40s
+./config-dd-wrt.sh ${ap_number} init
