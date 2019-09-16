@@ -6,17 +6,18 @@
 # ./setup-dd-wrt.sh ap-number
 #
 
+ap_number="${1}"
+
 ############## FLASH ####################
 
 imgURI=https://download1.dd-wrt.com/dd-wrtv2/downloads/betas/2019/08-06-2019-r40559/netgear-r7800/factory-to-ddwrt.img
 imgFile=./factory-to-ddwrt.img
 
-ap_number="${1}"
 
 if [[ ! -e ${imgFile} ]]
 then
-  # Be reasonably sure we only use fully downloaded files:
-  # A hash check ala nix would definitely be better ... hmm, maybe I should nixify this.
+  Be reasonably sure we only use fully downloaded files:
+  A hash check ala nix would definitely be better ... hmm, maybe I should nixify this.
   mkdir .dl
   cd .dl
   wget ${imgURI}
