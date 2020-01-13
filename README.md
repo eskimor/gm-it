@@ -15,7 +15,26 @@ All our nodes will be below within 10.134.0.0/16
 
 Note: The above are not real subnets, we will have one big switched network at the beginning. Those are merely reserved ranges.
 
+# Switch IP Addresses
+
+Stiege 2: 192.168.2.2
+Serverraum: 192.168.2.10
+
 
 # Broken APs
 
-7, 10, 15
+15
+
+# Netgear:
+
+APs >= 1 < 20
+
+# TP-Link
+
+20: MAC:98-DA-C4-15-1C-1E
+21: MAC:98-DA-C4-15-1C-DB
+22: MAC:68-FF-7B-EF-25-C1
+23: MAC:98-DA-C4-15-1D-DD
+24: MAC:98-DA-C4-15-07-A2
+25: MAC:68-FF-7B-EF-26-06
+26: MAC:98-DA-C4-15-11-C5

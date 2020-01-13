@@ -1,36 +1,71 @@
 #!/usr/bin/env bash
 
 # USAGE:
-# Configure this PC with an IP address like 192.168.1.10, then run:
+# Configure this PC with the IP address 192.168.1.10.
+
+# Then run:
 #
-# ./setup-dd-wrt.sh ap-number
+# For netgear r7800:
+# ./setup-dd-wrt.sh r7800 ap-number
+# For tp-link, when already flashed with dd-wrt:
+# ./setup-dd-wrt.sh c7 ap-number
 #
 
-ap_number="${1}"
+model="${1}"
+ap_number="${2}"
+router_ip="192.168.1.1"
 
 ############## FLASH ####################
 
-imgURI=https://download1.dd-wrt.com/dd-wrtv2/downloads/betas/2019/08-06-2019-r40559/netgear-r7800/factory-to-ddwrt.img
-imgFile=./factory-to-ddwrt.img
+case "${model}" in
+  "c7")
+    router_fw_uri="ftp://ftp.dd-wrt.com/betas/2020/01-09-2020-r41954/tplink_archer-c7-v5/factory-to-ddwrt.bin"
+    imgFile=./factory-to-ddwrt.bin
+    ;;
+  "r7800")
+    router_ip="192.168.1.1"
+    router_fw_uri=https://download1.dd-wrt.com/dd-wrtv2/downloads/betas/2019/08-06-2019-r40559/netgear-r7800/factory-to-ddwrt.img
+    imgFile=./factory-to-ddwrt.img
+    ;;
+  *)
+    echo "Unsupported router model!"
+    exit -1
+esac
+
+mkdir ${model}
+router_fw="${model}/factory-to-ddwrt.bin"
 
 
-if [[ ! -e ${imgFile} ]]
+if [[ ! -e ${router_fw} ]]
 then
-  Be reasonably sure we only use fully downloaded files:
-  A hash check ala nix would definitely be better ... hmm, maybe I should nixify this.
+  #Be reasonably sure we only use fully downloaded files:
+  #A hash check ala nix would definitely be better ... hmm, maybe I should nixify this.
   mkdir .dl
   cd .dl
-  wget ${imgURI}
-  mv ${imgFile} ../
+  wget ${router_fw_uri}
+  mv ${imgFile} ../${router_fw}
   cd ..
   rmdir .dl
 fi
 
-tftp 192.168.1.1 <<EOF
-binary
-put ${imgFile}
+case "${model}" in
+  "c7")
+    echo "Please visit 192.168.0.1, go to admin - firmware upgrade and upload ${router_fw} (you can skip most of the install wizard):"
+    echo "Press Ctrl+D when you are done."
+    firefox "http://192.168.0.1"
+    cat
+    ;;
+  "r7800")
+    tftp ${router_ip} <<EOF
+    binary
+    put ${router_fw}
 EOF
-sleep 90s
+    sleep 90s
+    ;;
+  *)
+  echo "Unsupported router model!"
+  exit -1
+esac
 
 ############## FLASH END ####################
 
