@@ -26,6 +26,7 @@ function setOption {
 }
 
 ap_ip=10.134.1.${ap_number}
+ssid_name="GM-GUEST"
 
 #Script running on the router:
 sshAP <<EOF
@@ -39,8 +40,6 @@ nvram set "router_name=${ap_hostname}"
 
 echo "Disabling DHCP server"
 nvram set "lan_proto=static"
-
-ssid_name="GM-GUEST"
 
 # Common wifi settings:
 
