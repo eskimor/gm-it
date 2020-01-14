@@ -27,16 +27,18 @@ function setOption {
 
 ap_ip=10.134.1.${ap_number}
 
+#Script running on the router:
+sshAP <<EOF
 echo "Setting IP to ${ap_ip}"
-setOption "lan_ipaddr=${ap_ip}"
-setOption "lan_netmask=255.255.0.0"
+nvram set "lan_ipaddr=${ap_ip}"
+nvram set "lan_netmask=255.255.0.0"
 
 ap_hostname="gm-ap-${ap_number}"
 echo "Setting router name to ${ap_hostname}"
-setOption "router_name=${ap_hostname}"
+nvram set "router_name=${ap_hostname}"
 
 echo "Disabling DHCP server"
-setOption "lan_proto=static"
+nvram set "lan_proto=static"
 
 ssid_name="GM-GUEST"
 
@@ -45,43 +47,43 @@ ssid_name="GM-GUEST"
 for card in ath0 ath1
 do
   echo "Setting regdomain to Austria"
-  setOption "${card}_regdomain=AUSTRIA"
+  nvram set "\${card}_regdomain=AUSTRIA"
 
   echo "Setting txpwr to 30dBm"
-  setOption "${card}_txpwrdbm=30"
+  nvram set "\${card}_txpwrdbm=30"
 
   echo "Setting ssid to ${ssid_name}"
-  setOption "${card}_ssid=${ssid_name}"
+  nvram set "\${card}_ssid=${ssid_name}"
 
   echo "Setting up wpa2 and wpa3"
-  setOption "${card}_security_mode=wpa"
-  setOption "${card}_akm=psk2 psk3"
-  setOption "${card}_wpa_gt_rekey=3600"
-  setOption "${card}_ccmp=1"
-  setOption "${card}_psk2=1"
-  setOption "${card}_psk3=1"
+  nvram set "\${card}_security_mode=wpa"
+  nvram set "\${card}_akm=psk2 psk3"
+  nvram set "\${card}_wpa_gt_rekey=3600"
+  nvram set "\${card}_ccmp=1"
+  nvram set "\${card}_psk2=1"
+  nvram set "\${card}_psk3=1"
 
   echo "Setting wifi password"
-  setOption "${card}_wpa_psk=${wpa_phrase}"
+  nvram set "\${card}_wpa_psk=${wpa_phrase}"
 
   echo "Setting mode to AP"
-  setOption "${card}_mode=ap"
+  nvram set "\${card}_mode=ap"
 
   echo "Maximising bandwidth"
-  setOption "${card}_channelbw=2040"
+  nvram set "\${card}_channelbw=2040"
 
   echo "Enabling beam forming"
-  setOption "${card}_mubf=1"
-  setOption "${card}_subf=1"
+  nvram set "\${card}_mubf=1"
+  nvram set "\${card}_subf=1"
 done
 
-setOption "wl0_ssid=${ssid_name}"
-setOption "wl0_mode=ap"
-setOption "wl_mode=ap"
-
-
-sshAP nvram commit
-sshAP reboot
+nvram set "wl0_ssid=${ssid_name}"
+nvram set "wl0_mode=ap"
+nvram set "wl_mode=ap"
+echo "Commit and reboot"
+nvram commit
+reboot
+EOF
 
 
 
