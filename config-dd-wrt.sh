@@ -68,13 +68,25 @@ do
   echo "Setting mode to AP"
   nvram set "\${card}_mode=ap"
 
-  echo "Maximising bandwidth"
-  nvram set "\${card}_channelbw=2040"
-
   echo "Enabling beam forming"
   nvram set "\${card}_mubf=1"
   nvram set "\${card}_subf=1"
 done
+
+# Detect which wifi is which (on netgear it is the other way round as on tp-link):
+if (iwlist ath0 freq | grep -q 'Channel 100')
+then
+  wifi_5Ghz=ath0
+  wifi_24Ghz=ath1
+else
+  wifi_24Ghz=ath0
+  wifi_5Ghz=ath1
+fi
+
+echo "Setting channel bandwidth:"
+nvram set "\${wifi_5Ghz}_channelbw=40"
+nvram set "\${wifi_24Ghz}_channelbw=20"
+
 
 nvram set "wl0_ssid=${ssid_name}"
 nvram set "wl0_mode=ap"
