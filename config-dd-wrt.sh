@@ -38,40 +38,46 @@ setOption "router_name=${ap_hostname}"
 echo "Disabling DHCP server"
 setOption "lan_proto=static"
 
-echo "Setting regdomain to Austria"
-setOption "ath0_regdomain=AUSTRIA"
-setOption "ath1_regdomain=AUSTRIA"
-
-echo "Setting txpwr to 30dBm"
-setOption "ath0_txpwrdbm=30"
-setOption "ath1_txpwrdbm=30"
-
-
 ssid_name="GM-GUEST"
-echo "Setting ssid to ${ssid_name}"
-setOption "ath0_ssid=${ssid_name}"
-setOption "ath1_ssid=${ssid_name}"
+
+# Common wifi settings:
+
+for card in ath0 ath1
+do
+  echo "Setting regdomain to Austria"
+  setOption "${card}_regdomain=AUSTRIA"
+
+  echo "Setting txpwr to 30dBm"
+  setOption "${card}_txpwrdbm=30"
+
+  echo "Setting ssid to ${ssid_name}"
+  setOption "${card}_ssid=${ssid_name}"
+
+  echo "Setting up wpa2 and wpa3"
+  setOption "${card}_security_mode=wpa"
+  setOption "${card}_akm=psk2 psk3"
+  setOption "${card}_wpa_gt_rekey=3600"
+  setOption "${card}_ccmp=1"
+  setOption "${card}_psk2=1"
+  setOption "${card}_psk3=1"
+
+  echo "Setting wifi password"
+  setOption "${card}_wpa_psk=${wpa_phrase}"
+
+  echo "Setting mode to AP"
+  setOption "${card}_mode=ap"
+
+  echo "Maximising bandwidth"
+  setOption "${card}_channelbw=2040"
+
+  echo "Enabling beam forming"
+  setOption "${card}_mubf=1"
+  setOption "${card}_subf=1"
+done
+
 setOption "wl0_ssid=${ssid_name}"
-
-echo "Setting wifi password"
-setOption "ath0_wpa_psk=${wpa_phrase}"
-setOption "ath1_wpa_psk=${wpa_phrase}"
-
-echo "Setting mode to AP"
-setOption "ath0_mode=ap"
-setOption "ath1_mode=ap"
 setOption "wl0_mode=ap"
 setOption "wl_mode=ap"
-
-echo "Maximising bandwidth"
-setOption "ath0_channelbw=2040"
-setOption "ath1_channelbw=2040"
-
-echo "Enabling beam forming"
-setOption "ath0_mubf=1"
-setOption "ath1_mubf=1"
-setOption "ath0_subf=1"
-setOption "ath1_subf=1"
 
 
 sshAP nvram commit
