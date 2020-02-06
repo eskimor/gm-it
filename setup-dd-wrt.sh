@@ -2,6 +2,7 @@
 
 # USAGE:
 # Configure this PC with the IP address 192.168.1.10.
+# For TP-Link 192.168.0.10
 
 # Then run:
 #
