@@ -7,13 +7,21 @@
 # Then run:
 #
 # For netgear r7800:
-# ./setup-dd-wrt.sh r7800 ap-number
+# ./setup-dd-wrt.sh r7800 stiege top-number
 # For tp-link, when already flashed with dd-wrt:
-# ./setup-dd-wrt.sh c7 ap-number
+# ./setup-dd-wrt.sh c7 stiege top-number
+
+# See
+
+# https://docs.google.com/document/d/1PglX5TcNaH_ZIqJSVUVMM_mFxx2aE1yNXjn3ciF7-pI/edit
+
+# for Stiege and top-number definitions.
 #
 
 model="${1}"
-ap_number="${2}"
+stiege=${2}
+top_number=${3}
+ap_number="${stiege}${top_number}"
 router_ip="192.168.1.1"
 
 ############## FLASH ####################
@@ -94,4 +102,5 @@ authCurl --data-urlencode submit_button=services --data-urlencode action=ApplyTa
 sed -i 's/192.168.1.1.*$//1' ~/.ssh/known_hosts
 echo "Waiting for ssh to come up ..."
 sleep 40s
-./config-dd-wrt.sh ${ap_number} init
+# TODO: What to put here for auto?
+./config-dd-wrt.sh 192.168.1.1 ${stiege} ${top_number} auto auto
