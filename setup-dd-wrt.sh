@@ -103,4 +103,4 @@ sed -i 's/192.168.1.1.*$//1' ~/.ssh/known_hosts
 echo "Waiting for ssh to come up ..."
 sleep 40s
 # TODO: What to put here for auto?
-./config-dd-wrt.sh 192.168.1.1 ${stiege} ${top_number} auto auto
+./config-dd-wrt.sh 192.168.1.1 ${stiege} ${top_number}
