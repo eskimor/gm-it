@@ -9,7 +9,7 @@
 #
 # The AP gets configured with an IP based on the ap-number. The first parameter
 # is the IP the accesspoint is reachable on when the script is run.
-
+set -xe
 current_ip=${1}
 stiege=${2}
 top_number=${3}
@@ -52,7 +52,7 @@ do
     then
       ap_model=r7800
       wifi_bssid_24Ghz=32:78:00:00:2${stiege}:${top_number}
-      wifi_bssid_5GHz=32:78:00:00:5${stiege}:${top_number}
+      wifi_bssid_5Ghz=32:78:00:00:5${stiege}:${top_number}
       wifi_5Ghz=ath0
       wifi_24Ghz=ath1
     else
