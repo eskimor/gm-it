@@ -39,9 +39,9 @@ do
   echo "Configuring AP NUMBER: ${ap_number}"
   stiege_top=$(stiege_top_per_old_ap_number ${ap_number})
   new_ap_number="$(for i in ${stiege_top}; do echo -n $i;done)"
-  # if ping -c1 10.134.1.${ap_number}
-  # then
-    # ./config-dd-wrt.sh 10.134.1.${ap_number} ${stiege_top}
-    echo 10.134.1.${ap_number} ${stiege_top}
-  # fi
+  if ping -c1 10.134.1.${ap_number}
+  then
+    ./config-dd-wrt.sh 10.134.1.${ap_number} ${stiege_top}
+    # echo 10.134.1.${ap_number} ${stiege_top}
+  fi
 done
