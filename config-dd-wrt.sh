@@ -9,7 +9,7 @@
 #
 # The AP gets configured with an IP based on the ap-number. The first parameter
 # is the IP the accesspoint is reachable on when the script is run.
-set -xe
+set -x
 current_ip=${1}
 stiege=${2}
 top_number=${3}
