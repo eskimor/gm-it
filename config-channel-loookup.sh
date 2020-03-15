@@ -29,6 +29,7 @@ function channels_per_ap_number {
     217) echo 13 44 ;;
     221) echo 3 48 ;;
     224) echo 13 64 ;;
+    225) echo 3 56 ;;
     226) echo 8 36 ;;
     227) echo 13 40 ;;
     232) echo 3 36
