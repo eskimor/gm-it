@@ -12,7 +12,8 @@ function stiege_top_per_old_ap_number {
     8) echo "2 17" ;;
     9) echo "2 21" ;;
     10) echo "2 04" ;;
-    11) echo "1 36" ;;
+    # 11) echo "1 36" ;;
+    11) echo "2 25" ;;
     12) echo "1 37" ;;
     13) echo "1 35" ;;
     14) echo "1 08" ;;
@@ -34,7 +35,8 @@ function stiege_top_per_old_ap_number {
 }
 
 #Missing: 15 27
-for ap_number in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 16 20 21 22 23 24 25 26
+#for ap_number in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 16 20 21 22 23 24 25 26
+for ap_number in $*
 do
   echo "Configuring AP NUMBER: ${ap_number}"
   stiege_top=$(stiege_top_per_old_ap_number ${ap_number})
