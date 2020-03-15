@@ -160,7 +160,7 @@ EOF
       sshAP reboot
     fi
   fi
-  sleep 10s
+  sleep 25s
 done
 
 
