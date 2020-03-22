@@ -117,11 +117,18 @@ do
 
       echo "Setting up wpa2 and wpa3"
       nvram set "\${card}_security_mode=wpa"
-      nvram set "\${card}_akm=psk2 psk3"
+
+      # Old Apple hardware does not seem to like WPA3:
+      # nvram set "\${card}_akm=psk2 psk3"
+      nvram set "\${card}_akm=psk2"
+
       nvram set "\${card}_wpa_gt_rekey=3600"
       nvram set "\${card}_ccmp=1"
       nvram set "\${card}_psk2=1"
-      nvram set "\${card}_psk3=1"
+
+      # Old Apple hardware does not seem to like WPA3:
+      # nvram set "\${card}_psk3=1"
+      nvram set "\${card}_psk3=0"
 
       echo "Setting wifi password"
       nvram set "\${card}_wpa_psk=${wpa_phrase}"
