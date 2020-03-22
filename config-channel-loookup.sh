@@ -13,13 +13,13 @@ function channels_per_ap_number {
     113) echo 3 36 ;;
     117) echo 13 52 ;;
     121) echo 8 48 ;;
-    123) echo 3 60 ;;
+    123) echo 13 60 ;;
     132) echo 13 60 ;;
     133) echo 8 52 ;;
     134) echo 3 48 ;;
     135) echo 13 64 ;;
     136) echo 8 44 ;;
-    137) echo 13 40 ;;
+    137) echo 3 40 ;;
     138) echo 3 56 ;;
     204) echo 3 60 ;;
     206) echo 13 40 ;;
