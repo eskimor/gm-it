@@ -113,7 +113,7 @@ do
       echo "Setting txpwr to 30dBm"
       nvram set "\${card}_txpwrdbm=30"
 
-      echo "Setting up wpa2 and wpa3"
+      echo "Setting up wpa2 and disable wpa3"
       nvram set "\${card}_security_mode=wpa"
 
       # Old Apple hardware does not seem to like WPA3:
@@ -142,6 +142,9 @@ do
     echo "Setting channel bandwidth:"
     nvram set "\${wifi_5Ghz}_channelbw=40"
     nvram set "\${wifi_24Ghz}_channelbw=20"
+
+    echo "Setting 5 GHz to use upper extension band:"
+    nvram set "\${wifi_5Ghz}_nctrlsb=ull"
 
     echo "Setting 2.4GHz ssid to ${ssid_name_24Ghz}"
     nvram set "\${wifi_5Ghz}_ssid=${ssid_name_24Ghz}"
