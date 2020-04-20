@@ -88,3 +88,11 @@ function freqs_per_ap_number {
   done
   echo
 }
+
+function guest_ssid_5Ghz_per_ap_numer {
+  case "$1" in
+    135) echo "GM-GUEST-5GHz" ;;
+    *) echo "GM-GUEST"
+     ;;
+  esac
+}

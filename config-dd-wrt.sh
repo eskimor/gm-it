@@ -16,7 +16,7 @@ top_number=${3}
 
 ap_number=${stiege}${top_number}
 
-source ./config-channel-loookup.sh
+source ./config-lookup.sh
 freqs=( $(freqs_per_ap_number ${ap_number}) )
 
 #Frequency, e.g. 2427 / 0 for auto
@@ -39,7 +39,8 @@ function setOption {
 }
 
 ap_ip=10.134.1.${ap_number}
-ssid_name="GM-GUEST"
+ssid_name_24Ghz="GM-GUEST"
+ssid_name_5Ghz=$(guest_ssid_5Ghz_per_ap_numer ${ap_number})
 
 # While loop so we can switch off wifi before changing BSSIDs as otherwise clients might get severly confused (Windows machines at least):
 while :
@@ -112,9 +113,6 @@ do
       echo "Setting txpwr to 30dBm"
       nvram set "\${card}_txpwrdbm=30"
 
-      echo "Setting ssid to ${ssid_name}"
-      nvram set "\${card}_ssid=${ssid_name}"
-
       echo "Setting up wpa2 and wpa3"
       nvram set "\${card}_security_mode=wpa"
 
@@ -144,6 +142,12 @@ do
     echo "Setting channel bandwidth:"
     nvram set "\${wifi_5Ghz}_channelbw=40"
     nvram set "\${wifi_24Ghz}_channelbw=20"
+
+    echo "Setting 2.4GHz ssid to ${ssid_name_24Ghz}"
+    nvram set "\${wifi_5Ghz}_ssid=${ssid_name_24Ghz}"
+
+    echo "Setting 5GHz ssid to ${ssid_name_5Ghz}"
+    nvram set "\${wifi_24Ghz}_ssid=${ssid_name_5Ghz}"
 
     echo "Setting channels:"
     nvram set \${wifi_24Ghz}_channel=${wifi_channel_24Ghz}
