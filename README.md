@@ -44,3 +44,12 @@ APs >= 1 < 20
 30: 1 11
 31: 1 08
 32: 2 08
+
+# Switch IPs:
+
+Passwoerter, wie APs.
+
+Hauptswitch im Serverraum: 10.134.0.100
+Stiege1: 10.134.0.101
+Stiege2: 10.134.0.102
+Stiege2 (obenauf): 10.134.0.112
