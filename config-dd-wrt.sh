@@ -68,8 +68,8 @@ do
     # Have we configured BSSIDs yet? If not - make sure wifi is switched off, before
     # changing - otherwise turn it off and have us restarted.
 
-    wifi_current_bssid_24Ghz="\$(nvram get \${wifi_24Ghz} | sed 's/bssid=//1')"
-    wifi_current_bssid_5Ghz="\$(nvram get \${wifi_5Ghz} | sed 's/bssid=//1')"
+    wifi_current_bssid_24Ghz="\$(nvram get \${wifi_24Ghz}_config | sed 's/bssid=//1')"
+    wifi_current_bssid_5Ghz="\$(nvram get \${wifi_5Ghz}_config | sed 's/bssid=//1')"
     wifi_is_on_24Ghz="[[ \$(nvram get \${wifi_24Ghz}_net_mode) != disabled ]]"
     wifi_is_on_5Ghz="[[ \$(nvram get \${wifi_5Ghz}_net_mode) != disabled ]]"
 
