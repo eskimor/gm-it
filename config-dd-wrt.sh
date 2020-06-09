@@ -31,7 +31,7 @@ ap_ip=10.134.1.${ap_number}
 wpa_phrase=$(cat secure/wpa-phrase)
 
 function sshAP {
-      ssh root@${current_ip} -i secure/ap-key "$@"
+      ssh -oStrictHostKeyChecking=no root@${current_ip} -i secure/ap-key "$@"
 }
 
 function setOption {
