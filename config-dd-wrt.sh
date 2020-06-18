@@ -9,12 +9,27 @@
 #
 # The AP gets configured with an IP based on the ap-number. The first parameter
 # is the IP the accesspoint is reachable on when the script is run.
-set -x
 current_ip=${1}
 stiege=${2}
 top_number=${3}
 
-ap_number=${stiege}${top_number}
+# Input sanitation:
+if [[ ${#stiege} -ne 1 ]]
+then
+  echo "Stiege is always just one digit. If you have a bigger building, go and write your own script!"
+  exit -1
+fi
+
+if [[ ${#top_number} -gt 2 ]]
+then
+  echo "Top number is at most 2 digits. If you have a bigger building, go and write your own script!"
+  exit -1
+fi
+
+set -x
+
+# Avoid interpretation as an octal number:
+ap_number=$(echo ${stiege}${top_number} | sed 's/^0*//g')
 
 source ./config-lookup.sh
 freqs=( $(freqs_per_ap_number ${ap_number}) )
