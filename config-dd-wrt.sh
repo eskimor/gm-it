@@ -13,6 +13,12 @@ current_ip=${1}
 stiege=${2}
 top_number=${3}
 
+if [[ -z ${3} ]]
+then
+  echo "Usage: ./config-dd-wrt.sh current-ap-ip stiege top-number"
+  exit 0
+fi
+
 # Input sanitation:
 if [[ ${#stiege} -ne 1 ]]
 then
