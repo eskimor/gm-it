@@ -15,11 +15,6 @@ All our nodes will be below within 10.134.0.0/16
 
 Note: The above are not real subnets, we will have one big switched network at the beginning. Those are merely reserved ranges.
 
-# Switch IP Addresses
-
-Stiege 2: 192.168.2.2
-Serverraum: 192.168.2.10
-
 
 # Broken APs
 
