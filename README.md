@@ -68,3 +68,23 @@ Stiege1: 10.134.0.101
 Stiege2: 10.134.0.102
 
 Stiege2 (obenauf): 10.134.0.112
+
+# Next steps concerning full-declarative reouter settings
+
+Create script to load factory settings.
+Create script to change the settings which differ in our system.
+Do both for both devices (Netgear and tp-link)
+Document in Wiki
+
+How to set up a new device:
+  1) Flash factory settings
+  2) Flash individual settings.
+ 
+How to change a setting:
+  1) Dump current settings
+  2) Push to repo
+  3) Generate settings script from dump
+  4) Change setting
+  5) Apply to device
+  6) Check if successful
+  7) Push new settings to repo
