@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Re-configure all known aps
 
 

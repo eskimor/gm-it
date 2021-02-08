@@ -5,16 +5,61 @@
 #
 # ./config-dd-wrt.sh current-ap-ip stiege top-number
 
+# Or if this device is going to be our gateway, use this:
+
+# ./config-dd-wrt.sh current-ap-ip gw
+
 # For top-number and stiege have a look at: https://docs.google.com/document/d/1PglX5TcNaH_ZIqJSVUVMM_mFxx2aE1yNXjn3ciF7-pI/edit
 #
 # The AP gets configured with an IP based on the ap-number. The first parameter
 # is the IP the accesspoint is reachable on when the script is run.
-set -x
-current_ip=${1}
-stiege=${2}
-top_number=${3}
 
-ap_number=${stiege}${top_number}
+if [[ -z ${1} ]]
+then
+  echo "Usage: ./config-dd-wrt.sh current-ap-ip stiege top-number"
+  echo
+  echo " or, for configuring our gateway: "
+  echo
+  echo "./config-dd-wrt.sh current-ap-ip gw"
+  exit 0
+fi
+
+current_ip=${1}
+
+if [[ a${2} == agw ]]
+then
+  stiege=0
+  top_number=1
+  # Note: subnet is not really a subnet, it is just the second last octet:
+  subnet=0
+  # Different digit in MAC addresses, so we cannot get a conflict here.
+  mac_digit=1
+  is_gw=true
+else
+  stiege=${2}
+  top_number=${3}
+  subnet=1
+  mac_digit=0
+  is_gw=false
+fi
+
+# Input sanitation:
+if [[ ${#stiege} -ne 1 ]]
+then
+  echo "Stiege is always just one digit. If you have a bigger building, go and write your own script!"
+  exit -1
+fi
+
+if [[ ${#top_number} -gt 2 ]]
+then
+  echo "Top number is at most 2 digits. If you have a bigger building, go and write your own script!"
+  exit -1
+fi
+
+set -x
+
+# Avoid interpretation as an octal number:
+ap_number=$(echo ${stiege}${top_number} | sed 's/^0*//g')
 
 source ./config-lookup.sh
 freqs=( $(freqs_per_ap_number ${ap_number}) )
@@ -25,22 +70,21 @@ wifi_channel_24Ghz=${freqs[0]}
 wifi_channel_5Ghz=${freqs[1]}
 
 ap_hostname="gm-ap-${ap_number}"
-ap_ip=10.134.1.${ap_number}
+ap_ip=10.134.${subnet}.${ap_number}
 # Locally administred MACS:
 
 wpa_phrase=$(cat secure/wpa-phrase)
 
 function sshAP {
-      ssh root@${current_ip} -i secure/ap-key "$@"
+      ssh -oStrictHostKeyChecking=no root@${current_ip} -i secure/ap-key "$@"
 }
 
 function setOption {
   sshAP nvram set "$@"
 }
 
-ap_ip=10.134.1.${ap_number}
 ssid_name_24Ghz="GM-GUEST"
-ssid_name_5Ghz=$(guest_ssid_5Ghz_per_ap_numer ${ap_number})
+ssid_name_5Ghz=$(guest_ssid_5Ghz_per_ap_number ${ap_number})
 
 # While loop so we can switch off wifi before changing BSSIDs as otherwise clients might get severly confused (Windows machines at least):
 while :
@@ -52,14 +96,14 @@ do
     if (iw phy  phy0 info | grep -q '5500 MHz')
     then
       ap_model=r7800
-      wifi_bssid_24Ghz=32:78:00:00:2${stiege}:${top_number}
-      wifi_bssid_5Ghz=32:78:00:00:5${stiege}:${top_number}
+      wifi_bssid_24Ghz=32:78:00:0${mac_digit}:2${stiege}:${top_number}
+      wifi_bssid_5Ghz=32:78:00:0${mac_digit}:5${stiege}:${top_number}
       wifi_5Ghz=ath0
       wifi_24Ghz=ath1
     else
       ap_model=c7
-      wifi_bssid_24Ghz=32:00:C7:00:2${stiege}:${top_number}
-      wifi_bssid_5Ghz=32:00:C7:00:5${stiege}:${top_number}
+      wifi_bssid_24Ghz=32:00:C7:0${mac_digit}:2${stiege}:${top_number}
+      wifi_bssid_5Ghz=32:00:C7:0${mac_digit}:5${stiege}:${top_number}
       wifi_24Ghz=ath0
       wifi_5Ghz=ath1
     fi
@@ -68,8 +112,8 @@ do
     # Have we configured BSSIDs yet? If not - make sure wifi is switched off, before
     # changing - otherwise turn it off and have us restarted.
 
-    wifi_current_bssid_24Ghz="\$(nvram get \${wifi_24Ghz} | sed 's/bssid=//1')"
-    wifi_current_bssid_5Ghz="\$(nvram get \${wifi_5Ghz} | sed 's/bssid=//1')"
+    wifi_current_bssid_24Ghz="\$(nvram get \${wifi_24Ghz}_config | sed 's/bssid=//1')"
+    wifi_current_bssid_5Ghz="\$(nvram get \${wifi_5Ghz}_config | sed 's/bssid=//1')"
     wifi_is_on_24Ghz="[[ \$(nvram get \${wifi_24Ghz}_net_mode) != disabled ]]"
     wifi_is_on_5Ghz="[[ \$(nvram get \${wifi_5Ghz}_net_mode) != disabled ]]"
 
@@ -113,7 +157,7 @@ do
       echo "Setting txpwr to 30dBm"
       nvram set "\${card}_txpwrdbm=30"
 
-      echo "Setting up wpa2 and wpa3"
+      echo "Setting up wpa2 and disable wpa3"
       nvram set "\${card}_security_mode=wpa"
 
       # Old Apple hardware does not seem to like WPA3:
@@ -143,11 +187,14 @@ do
     nvram set "\${wifi_5Ghz}_channelbw=40"
     nvram set "\${wifi_24Ghz}_channelbw=20"
 
+    echo "Setting 5 GHz to use upper extension band:"
+    nvram set "\${wifi_5Ghz}_nctrlsb=ull"
+
     echo "Setting 2.4GHz ssid to ${ssid_name_24Ghz}"
-    nvram set "\${wifi_5Ghz}_ssid=${ssid_name_24Ghz}"
+    nvram set "\${wifi_24Ghz}_ssid=${ssid_name_24Ghz}"
 
     echo "Setting 5GHz ssid to ${ssid_name_5Ghz}"
-    nvram set "\${wifi_24Ghz}_ssid=${ssid_name_5Ghz}"
+    nvram set "\${wifi_5Ghz}_ssid=${ssid_name_5Ghz}"
 
     echo "Setting channels:"
     nvram set \${wifi_24Ghz}_channel=${wifi_channel_24Ghz}
