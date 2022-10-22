@@ -4,9 +4,9 @@
 # TODO: Basement is missing:
 function channels_per_ap_number {
   case "$1" in
-    001) echo 3  36 ;;
-    032) echo 8 52 ;;
-    033) echo 3 44 ;;
+      1) echo 3  36 ;;
+     32) echo 8 52 ;;
+     33) echo 3 44 ;;
     105) echo 3 40 ;;
     108) echo 13 60 ;;
     111) echo 8 56 ;;
