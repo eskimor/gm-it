@@ -58,6 +58,12 @@ fi
 
 set -x
 
+if [[ ${stiege} -eq 1 ]] && [[ ${top_number} -eq 37 ]] 
+then
+  echo "This AP cannot be configured automatically, as it has manual overrides. See issue #4"
+  exit -1
+fi
+
 # Avoid interpretation as an octal number:
 ap_number=$(echo ${stiege}${top_number} | sed 's/^0*//g')
 
